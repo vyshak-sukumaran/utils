@@ -1,0 +1,148 @@
+.container * {
+  box-sizing: border-box;
+}
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  --backdrop: rgba(0, 0, 0, 0.2);
+  --white: 255, 255, 255;
+  --primary: #5114b9;
+}
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--backdrop);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 300ms ease-in-out;
+  cursor: none;
+}
+.container[data-mouse="inside"] .controls{
+    opacity: 1;
+    visibility: visible;
+    cursor: default;
+}
+
+.controls.show {
+    visibility: visible;
+    opacity: 1;
+    cursor: default;
+}
+.top {
+  padding: 1rem;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.middle {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bottom {
+  padding: 1rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress {
+  width: 100%;
+  height: 0.45rem;
+  background-color: rgba(var(--white), 0.2);
+  appearance: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+.timeProgress .progress[step] {
+    background-color: transparent;
+    background-image: repeating-linear-gradient(to right, rgba(var(--white), 0.2), rgba(var(--white), 0.2) calc(12.5% - 1px), #05051a 12.5%);
+}
+.progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0;
+    box-shadow: -200rem 0 0 200rem rgba(var(--white), 0.9);
+}
+.progress::-moz-range-thumb {
+    border: none;
+    width: 0;
+    box-shadow: -200rem 0 0 200rem rgba(var(--white), 0.9);
+  }
+.progress:focus {
+    outline: none;
+}
+
+.timeProgress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0;
+}
+.volProgress{
+    max-width: 7rem;
+}
+.mainControls {
+  display: flex;
+  justify-content: space-between;
+}
+.mainControls .sub {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: white;
+}
+
+.icon.large {
+  width: 5rem;
+  height: 5rem;
+}
+/* spinner */
+.spinner {
+  border: 5px solid rgba(var(--white), 0.2);
+  border-radius: 50%;
+  border-top: 5px solid rgba(var(--white), 1);
+  width: 5rem;
+  height: 5rem;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
