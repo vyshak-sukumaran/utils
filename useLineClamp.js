@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export const useLineClamp = (ref) => {
+export const useLineClamp = () => {
+  /**
+   * @type {React.MutableRefObject<HTMLElement>}
+   */
+  const ref = useRef(null)
   const [expanded, setExpanded] = useState(false);
   const [btnVisible, setBtnVisible] = useState(false);
 
@@ -9,10 +13,10 @@ export const useLineClamp = (ref) => {
   };
   useEffect(() => {
     if (!ref.current) return;
-    let p = ref.current;
-    if (p.scrollHeight > p.clientHeight) {
+    let elem = ref.current;
+    if (elem.scrollHeight > elem.clientHeight) {
       setBtnVisible(true);
     }
   }, [ref]);
-  return { expanded, btnVisible, toggleLineClamp };
+  return { ref, expanded, btnVisible, toggleLineClamp };
 };
