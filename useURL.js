@@ -8,10 +8,12 @@ import { useCallback } from "react";
  * @param {string} key - A URL key to set as state.
  * @param {object} options - An object of options.
  * @param {any} options.defaultValue - The default value for the state.
+ * @param {boolean} options.replace - For not setting browser history stack when changing the state.
+ * @param {Array<string>} options.exclude - For excluding keys from the URL.
  * @returns {[any, (newValue: any) => void]} - An array containing the state
  *                                             and its setter function.
  */
-export function useURLState(key, options) {
+export function useURL(key, options) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -38,10 +40,17 @@ export function useURLState(key, options) {
     (value) => {
       if (!value) return "";
       const newSearchParams = new URLSearchParams(searchParams);
+
+      if (options?.exclude?.length) {
+        options.exclude.forEach((excludeKey) => {
+          newSearchParams.delete(excludeKey);
+        });
+      }
+
       newSearchParams.set(key, value);
       return newSearchParams.toString();
     },
-    [key, searchParams]
+    [key, options.exclude, searchParams]
   );
 
   /**
@@ -55,7 +64,10 @@ export function useURLState(key, options) {
         router.push(`${pathname}?${createQueryString(newValueOrCallback(urlState))}`)
         return
     }
-    router.push(`${pathname}?${createQueryString(newValueOrCallback)}`);
+    router.push(`${pathname}?${createQueryString(newValueOrCallback)}`, undefined, {
+      shallow: true,
+      replace: options?.replace ?? false,
+    });
   }
 
   return [urlState, setURLState];
