@@ -1,0 +1,170 @@
+/* rich text editor using quill */
+.ql-container {
+  font-family: var(--inter) !important;
+  font-size: 14px !important;
+}
+.ql-container,
+.ql-toolbar {
+  border: none !important;
+}
+.ql-editor {
+  min-height: 100px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+.ql-toolbar {
+  opacity: 0;
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  bottom: 4px;
+  transition: opacity 0.2s ease;
+  padding: 0 !important;
+}
+.ql-toolbar .ql-formats {
+  margin-right: 0 !important;
+}
+.ql-custom-wrapper.Dark {
+  color: white;
+}
+.ql-custom-wrapper .ql-editor.ql-blank::before {
+  font-style: normal !important;
+}
+.ql-custom-wrapper.Dark .ql-editor.ql-blank::before {
+  color: rgb(223, 223, 223) !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-fill {
+  color: white !important;
+  fill: rgb(200, 200, 200) !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-stroke {
+  stroke: rgb(200, 200, 200) !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-picker {
+  color: white !important;
+  border-color: gray !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-picker-options {
+  background-color: rgb(37, 37, 37) !important;
+  border-color: gray !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar button:hover .ql-fill {
+  color: #1976d2 !important;
+  fill: #1976d2 !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar button:hover .ql-stroke {
+  stroke: #1976d2 !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-active .ql-fill {
+  color: #1976d2 !important;
+  fill: #1976d2 !important;
+}
+.ql-custom-wrapper.Dark .ql-toolbar .ql-active .ql-stroke {
+  stroke: #1976d2 !important;
+}
+.ql-custom-wrapper .ql-snow .ql-tooltip {
+  z-index: 5;
+}
+.ql-custom-wrapper.Dark .ql-snow .ql-tooltip {
+  background-color: rgb(37, 37, 37) !important;
+  border-color: rgb(73, 73, 73) !important;
+  color: rgb(200, 200, 200) !important;
+  box-shadow: 0px 0px 5px rgb(107, 107, 107) !important;
+}
+.ql-custom-wrapper .ql-snow .ql-tooltip input {
+  background-color: white !important;
+  border-color: rgb(131, 131, 131) !important;
+  color: rgb(78, 78, 78) !important;
+}
+.ql-custom-wrapper.Dark .ql-snow .ql-tooltip input {
+  background-color: rgb(37, 37, 37) !important;
+  border-color: rgb(73, 73, 73) !important;
+  color: rgb(200, 200, 200) !important;
+}
+.ql-hidden {
+  display: none !important;
+}
+
+/* quill custom prompt box */
+
+.ql-custom-prompt-box {
+  background-color: white;
+  border: 1px solid rgb(124, 124, 124);
+  width: 400px;
+  height: fit-content;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  padding: 16px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(150, 150, 150, 0.5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.ql-custom-prompt-box.Dark {
+  background-color: rgb(37, 37, 37);
+  border: 1px solid rgb(73, 73, 73);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+.ql-custom-prompt-box span {
+  color: rgb(175, 175, 175);
+  font-size: 14px;
+}
+.ql-custom-prompt-box.Dark {
+  color: rgb(200, 200, 200);
+}
+.ql-custom-prompt-box input {
+  flex-grow: 1;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid rgb(175, 175, 175);
+  background-color: white;
+  color: rgb(78, 78, 78);
+  font-size: 14px;
+  outline: none;
+}
+.ql-custom-prompt-box.Dark input {
+  background-color: rgb(37, 37, 37);
+  border: 1px solid rgb(73, 73, 73);
+  color: rgb(200, 200, 200);
+}
+.ql-custom-prompt-box input:focus-within {
+  border-color: hsl(var(--sky));
+}
+.ql-custom-prompt-box button {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(223, 223, 223);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 3px rgba(71, 71, 71, 0.384);
+  color: rgb(27, 27, 27);
+  cursor: pointer;
+  margin-top: 6px;
+  width: 90px;
+  font-size: 14px;
+}
+.ql-custom-prompt-box.Dark button {
+  background-color: rgb(37, 37, 37);
+  border: 1px solid rgb(73, 73, 73);
+  color: rgb(200, 200, 200);
+}
+.ql-custom-prompt-box button.ql-custom-prompt-ok-button {
+  background-color: hsl(var(--sky)) !important;
+  color: white !important;
+  border-color: hsl(var(--sky)) !important;
+}
+.ql-custom-prompt-box-backdrop {
+  z-index: 9998;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
