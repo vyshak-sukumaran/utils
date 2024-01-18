@@ -168,15 +168,13 @@ export function useURLState(options) {
     router.push(pathToGo);
   }
 
-  function reset(defaultValues) {
+  function reset(defaultValues = options.defaultValues) {
     const params = new URLSearchParams(searchParams);
     if (options?.exclude?.length) {
       options.exclude.forEach((excludeKey) => {
         params.delete(excludeKey);
       })
     }
-    defaultValues = defaultValues || options.defaultValues;
-
     Object.keys(defaultValues).forEach(key => {
       const value = defaultValues[key];
       if (Array.isArray(value)) {
