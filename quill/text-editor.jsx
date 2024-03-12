@@ -1,18 +1,64 @@
 import { useEffect, useRef, useState } from "react";
 import "quill/dist/quill.snow.css";
 
+var formats = [
+  "background",
+  "bold",
+  "color",
+  "font",
+  "code",
+  "italic",
+  "link",
+  "size",
+  "strike",
+  "script",
+  "underline",
+  "blockquote",
+  "header",
+  "indent",
+  "list",
+  "align",
+  "direction",
+  "code-block",
+  "formula",
+  // 'image'
+  // 'video'
+];
+const quillOptions = {
+  theme: "snow",
+  modules: {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ color: [] }, { background: [] }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link"],
+      ["clean"],
+    ],
+  },
+  readOnly: true,
+  formats: formats,
+};
+
 export const RichTextArea = ({
   theme,
   value,
   onChange,
-  onBlur,
-  readOnly,
+  onBlur = () => {},
+  readOnly = false,
   limit,
   placeholder = "",
   width = 200,
   fullWidth = false,
   showCounter = false,
   error = false,
+  noBorder = false,
   helperText = "",
   ...rest
 }) => {
@@ -40,28 +86,20 @@ export const RichTextArea = ({
 
       if (!quillRef.current) {
         quillRef.current = new Quill(editorRef.current, {
-          theme: "snow",
-          modules: {
-            toolbar: [
-              [{ header: "1" }, { header: "2" }],
-              [{ size: [] }],
-              ["bold", "italic", "underline", "strike", "blockquote"],
-              [{ color: [] }, { background: [] }],
-              [
-                { list: "ordered" },
-                { list: "bullet" },
-                { indent: "-1" },
-                { indent: "+1" },
-              ],
-              ["link"],
-              ["clean"],
-            ],
-          },
+          ...quillOptions,
           placeholder: placeholder,
           readOnly: readOnly,
         });
-      }
 
+        quillRef.current.clipboard.addMatcher("img", (_node, _delta) => {
+          const Delta = Quill.import("delta");
+          return new Delta().insert("");
+        });
+        quillRef.current.clipboard.addMatcher("picture", (_node, _delta) => {
+          const Delta = Quill.import("delta");
+          return new Delta().insert("");
+        });
+      }
       if (value && !initialValueSet) {
         const cursorPosition = quillRef.current.getSelection()?.index;
 
@@ -142,6 +180,7 @@ export const RichTextArea = ({
           onChange(JSON.stringify(quillRef.current.getContents()));
         }
       };
+
       quillRef.current.on("text-change", textChangeHandler);
 
       return () => {
@@ -218,13 +257,20 @@ export const RichTextArea = ({
   const currentLength = quillRef.current ? quillRef.current.getLength() - 1 : 0;
   const textColor = theme === "Dark" ? "text-gray-300" : "text-gray-500";
 
+  const border = noBorder
+    ? ""
+    : `border-[1px] focus-within:border-blue ${
+        error
+          ? "border-red-500"
+          : theme === "Dark"
+          ? "border-gray-500"
+          : "border-gray-300"
+      }`;
   return (
-    <div className="relative">
+    <div className="relative" onDrop={(e) => e.preventDefault()}>
       <div
         ref={containerRef}
-        className={`ql-custom-wrapper ${theme} ${width} relative min-h-[80px] flex flex-col-reverse rounded-md border-[1px] focus-within:border-blue cursor-text ${
-          theme === "Dark" ? "border-gray-500" : "border-gray-300"
-        }`}
+        className={`ql-custom-wrapper ${theme} ${width} ${border} relative min-h-[80px] flex flex-col-reverse rounded-md cursor-text`}
         {...rest}
       >
         <div ref={editorRef} className={`${theme}`}></div>
@@ -240,6 +286,74 @@ export const RichTextArea = ({
             {currentLength}/{limit}
           </span>
         )}
+      </div>
+    </div>
+  );
+};
+
+export const RichTextAreaViewer = ({
+  content = "",
+  theme,
+  fullWidth,
+  width = 300,
+  noBorder = false,
+  ...rest
+}) => {
+  const [initialValueSet, setInitialValueSet] = useState(false);
+  width = fullWidth ? "w-full" : `w-[${width}px]`;
+  /**
+   * @type {React.MutableRefObject<HTMLDivElement>}
+   */
+  const editorRef = useRef(null);
+  /**
+   * @type {React.MutableRefObject<import("quill").Quill>}
+   */
+  let quillRef = useRef(null);
+
+  useEffect(() => {
+    const initializeQuill = async () => {
+      if (!editorRef.current) return;
+      const { default: Quill } = await import("quill");
+
+      if (!quillRef.current) {
+        quillRef.current = new Quill(editorRef.current, quillOptions);
+      }
+
+      if (content && !initialValueSet) {
+        const cursorPosition = quillRef.current.getSelection()?.index;
+
+        if (quillRef.current.getLength() > 1) {
+          quillRef.current.setText("");
+        }
+
+        try {
+          quillRef.current.setContents(JSON.parse(content));
+        } catch {
+          quillRef.current.setText(content);
+        }
+
+        if (cursorPosition !== undefined) {
+          quillRef.current.setSelection(cursorPosition, 0);
+        }
+        // Update the state variable to indicate that the initial value has been set
+        setInitialValueSet(true);
+      }
+    };
+    initializeQuill();
+  }, [editorRef, quillRef, content, initialValueSet]);
+
+  const border = noBorder
+    ? ""
+    : `border-[1px] focus-within:border-blue ${
+        theme === "Dark" ? "border-gray-500" : "border-gray-300"
+      }`;
+  return (
+    <div className="relative">
+      <div
+        className={`ql-custom-wrapper ${theme} ${width} ${border} relative min-h-[80px] rounded-md cursor-text `}
+        {...rest}
+      >
+        <div ref={editorRef} className={`${theme}`}></div>
       </div>
     </div>
   );
