@@ -21,7 +21,7 @@ export const AnimatedNav = ({
     };
   }
   return (
-    <nav className="flex gap-4 p-4 items-center">
+    <nav className="flex gap-4 items-center">
       {options.map((item) => (
         <div key={item.value} className="h-fit w-fit text-slate-700">
           <input
@@ -36,9 +36,9 @@ export const AnimatedNav = ({
           />
           <label
             htmlFor={`${idPrefix}${item.value}`}
-            className="p-5 block hover:cursor-pointer peer-checked:text-sky-or-purple relative "
+            className="p-3 font-medium text-slate-500 dark:text-slate-300 text-sm block hover:cursor-pointer peer-checked:text-sky-or-purple relative "
           >
-            {labelFormat.format(item)}
+            <p dangerouslySetInnerHTML={{ __html: labelFormat.format(item) }} />
             {item.value === value && (
               <motion.div
                 className="absolute bottom-0 left-0 w-full h-[2px] bg-sky-or-purple"
