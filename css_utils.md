@@ -1,5 +1,6 @@
 ## CSS Colors Opacity
 
+```css
 Opacity %   255 Step        2 digit HEX prefix
 0%          0.00            00
 5%          12.75           0C
@@ -22,3 +23,4 @@ Opacity %   255 Step        2 digit HEX prefix
 90%         229.50          E5
 95%         242.25          F2
 100%        255.00          FF
+```
